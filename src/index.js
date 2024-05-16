@@ -5,7 +5,7 @@ import {
   openPopup,
   closePopup,
   addAnimation,
-  addLoadingText,
+  addOverlayClick
 } from "./components/modal.js";
 import {
   validationConfig,
@@ -47,9 +47,9 @@ import {
 } from "./components/API.js";
 
 // анимация для попапов после загрузки страницы
-window.onload = function (popup) {
-  addAnimation(popup);
-};
+window.onload = addAnimation;
+
+addOverlayClick();
 
 // для id пользователя
 let profileId;
@@ -59,6 +59,9 @@ Promise.all([getDataProfile(), getDataCards()]).then(([userData, cardData]) => {
   profileTitle.textContent = userData.name;
   profileDescription.textContent = userData.about;
   profileId = userData._id;
+  
+  const avatarUrl = userData.avatar;
+  profileAvatar.style.backgroundImage = `url(${avatarUrl})`;
 
   cardData.forEach((cardData) => {
     const cardElement = createCard(
@@ -81,8 +84,8 @@ editProfile.addEventListener("click", function () {
 
 editCard.addEventListener("click", function () {
   openPopup(popupCard);
-  clearValidation(formNewCard, validationConfig);
-  formNewCard.reset();
+  formNewAvatar.reset();
+  clearValidation(formNewAvatar, validationConfig);
 });
 
 editAvatar.addEventListener("click", function () {
@@ -91,21 +94,21 @@ editAvatar.addEventListener("click", function () {
   formNewAvatar.reset();
 });
 
-// Обработчики событий для закрытия
-closePopupProfile.addEventListener("click", function () {
-  closePopup(popupProfile);
-});
-
-closePopupCard.addEventListener("click", function () {
-  closePopup(popupCard);
-});
-
-closePopupImage.addEventListener("click", function () {
-  closePopup(popupImage);
-});
-
-closePopupAvatar.addEventListener("click", function () {
-  closePopup(popupAvatar);
+// Обработчики событий для закрытия 
+closePopupProfile.addEventListener("click", function () { 
+  closePopup(popupProfile); 
+}); 
+ 
+closePopupCard.addEventListener("click", function () { 
+  closePopup(popupCard); 
+}); 
+ 
+closePopupImage.addEventListener("click", function () { 
+  closePopup(popupImage); 
+}); 
+ 
+closePopupAvatar.addEventListener("click", function () { 
+  closePopup(popupAvatar); 
 });
 
 // Отправка формы смены имени и занятия
@@ -119,15 +122,15 @@ function handleProfileFormSubmit() {
     .then(() => {
       profileTitle.textContent = newName;
       profileDescription.textContent = newJob;
+      closePopup(popupProfile);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
-      closePopup(popupProfile);
       addLoadingText(false, profileSubmit);
     });
-}
+};
 
 // Обработчик событий для отправки
 formNewProfile.addEventListener("submit", (evt) => {
@@ -140,16 +143,18 @@ function handleAvatarFormSubmit() {
   addLoadingText(true, avatarSubmit);
 
   const newAvatarUrl = avatarUrl.value;
-  profileAvatar.style.backgroundImage = `url(${newAvatarUrl})`;
 
   editYourAvatar(newAvatarUrl)
     .then(() => {
+      profileAvatar.style.backgroundImage = `url(${newAvatarUrl})`;
       closePopup(popupAvatar);
-      addLoadingText(false, avatarSubmit);
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => {
+      addLoadingText(false, avatarSubmit);
+    })
 }
 
 // Обработчик событий для отправки
@@ -157,21 +162,6 @@ formNewAvatar.addEventListener("submit", (evt) => {
   evt.preventDefault();
   handleAvatarFormSubmit();
 });
-
-// Обновление аватара на странице при ее загрузке
-function changeAvatarFromServ() {
-  getDataProfile()
-    .then((userData) => {
-      const avatarUrl = userData.avatar;
-      profileAvatar.style.backgroundImage = `url(${avatarUrl})`;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
-
-// Обработчик событий для отправки
-document.addEventListener("DOMContentLoaded", changeAvatarFromServ);
 
 // Создание карточек через кнопку на странице(+)
 function addNewCard(evt) {
@@ -193,12 +183,12 @@ function addNewCard(evt) {
       );
       placesList.prepend(newCardElement);
       formNewCard.reset();
+      closePopup(popupCard);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
-      closePopup(popupCard);
       addLoadingText(false, cardSubmit);
     });
 }
@@ -213,6 +203,15 @@ function openPopupImage(imageSrc, imageName) {
   popupImageName.textContent = imageName;
 
   openPopup(popupImage);
+}
+
+// добавление анимации отправки к кнопкам
+function addLoadingText(loading, button) {
+  if (loading) {
+    button.textContent = "Сохранение...";
+  } else {
+    button.textContent = "Сохранить";
+  }
 }
 
 enableValidation(validationConfig);

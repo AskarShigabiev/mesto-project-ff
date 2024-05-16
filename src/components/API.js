@@ -6,22 +6,23 @@ const config = {
   },
 };
 
+
+// функция проверки ответа
+function checkResponse(res) {
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+};
+
 // Получение данных для профиля
 function getDataProfile() {
   return fetch(`${config.baseUrl}/users/me`, {
     method: "GET",
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    .then(checkResponse);
 }
 
 // Получение данных для карточки
@@ -30,16 +31,7 @@ function getDataCards() {
     method: "GET",
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(checkResponse);
 }
 
 // Редактирование профиля на сервере
@@ -52,16 +44,7 @@ function editProfileData(newName, newJob) {
       about: newJob,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(checkResponse);
 }
 
 // Добавление карточки на сервер
@@ -74,16 +57,7 @@ function editCardData(cardData) {
       link: cardData.link,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(checkResponse);
 }
 
 // Лайк карточки
@@ -92,16 +66,7 @@ function likeOtherCard(id) {
     method: "PUT",
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(checkResponse);
 }
 
 // Убрать лайк карточки
@@ -110,16 +75,7 @@ function deliteLikeOtherCard(id) {
     method: "DELETE",
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(checkResponse);
 }
 
 // Удаление карточки
@@ -128,16 +84,7 @@ function deleteYourCard(id) {
     method: "DELETE",
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(checkResponse);
 }
 
 // Изменение аватара
@@ -149,16 +96,7 @@ function editYourAvatar(avatarNewLink) {
       avatar: avatarNewLink,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(checkResponse);
 }
 
 export {

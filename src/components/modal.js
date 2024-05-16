@@ -1,25 +1,16 @@
+const popups = document.querySelectorAll(".popup");
+
 // Функция открытия
 function openPopup(popup) {
   popup.classList.add("popup_is-opened");
   document.addEventListener("keyup", closePopupEsc);
-  addOverlayClick();
 }
 
 // добавление анимации открытия к попапам
 function addAnimation() {
-  const popups = document.querySelectorAll(".popup");
   popups.forEach((popup) => {
     popup.classList.add("popup_is-animated");
   });
-}
-
-// добавление анимации отправки к кнопкам
-function addLoadingText(loading, button) {
-  if (loading) {
-    button.textContent = "Сохранение...";
-  } else {
-    button.textContent = "Сохранить";
-  }
 }
 
 // Функция закрытия
@@ -45,10 +36,9 @@ function closePopupOverlay(evt) {
 
 // Добавляем обработчик клика попапам
 function addOverlayClick() {
-  const popups = document.querySelectorAll(".popup");
   popups.forEach((popup) => {
     popup.addEventListener("click", closePopupOverlay);
   });
 }
 
-export { openPopup, closePopup, addAnimation, addLoadingText };
+export { openPopup, closePopup, addAnimation, addOverlayClick };
