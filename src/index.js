@@ -72,9 +72,9 @@ Promise.all([getDataProfile(), getDataCards()]).then(([userData, cardData]) => {
     );
     placesList.append(cardElement);
   })
-  .catch((err) => {
-    console.log(err);
-  })
+})
+.catch((err) => {
+  console.log(err);
 });
 
 // Для открытия форм
