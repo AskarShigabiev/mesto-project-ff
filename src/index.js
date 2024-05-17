@@ -71,7 +71,10 @@ Promise.all([getDataProfile(), getDataCards()]).then(([userData, cardData]) => {
       profileId
     );
     placesList.append(cardElement);
-  });
+  })
+  .catch((err) => {
+    console.log(err);
+  })
 });
 
 // Для открытия форм
@@ -84,14 +87,14 @@ editProfile.addEventListener("click", function () {
 
 editCard.addEventListener("click", function () {
   openPopup(popupCard);
-  formNewAvatar.reset();
-  clearValidation(formNewAvatar, validationConfig);
+  formNewCard.reset();
+  clearValidation(formNewCard, validationConfig);
 });
 
 editAvatar.addEventListener("click", function () {
   openPopup(popupAvatar);
-  clearValidation(formNewAvatar, validationConfig);
   formNewAvatar.reset();
+  clearValidation(formNewAvatar, validationConfig);
 });
 
 // Обработчики событий для закрытия 
